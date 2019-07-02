@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmfxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="xmlDefinition.xsd">
+
+<pattern version="1" id="my.test.pattern">
+  <head>
+      <traceType id="org.eclipse.linuxtools.tmf.ui.type.ctf"/>
+      <label value="Benchmark results" />
+  </head>
+  <patternHandler>
+	<test id="time_condition">
+	    <if>
+		<condition>
+		    <elapsedTime unit="us">
+			<less since="in_progress" value="10" />
+		    </elapsedTime>
+		</condition>
+	    </if>
+	</test>
+      <action id="interval_x_founded">
+          <stateChange>
+              <stateAttribute type="constant" value="#CurrentScenario" />
+              <stateAttribute type="constant" value="name" />
+              <stateValue type="eventName"/>
+          </stateChange>
+      </action>
+
+      <action id="exit_interval_found">
+          <segment>
+              <segType>
+                  <segName>
+                      <stateValue type="query">
+                          <stateAttribute type="constant" value="#CurrentScenario" />
+                          <stateAttribute type="constant" value="name" />
+                      </stateValue>
+                  </segName>
+              </segType>
+          </segment>
+      </action>
+
+      <fsm id="syscall" initial="start">
+          <state id="start">
+              <transition event="nobench_trace:no_begin*" target="in_progress" action="interval_x_founded" saveStoredFields="true"/>
+          </state>
+          <state id="in_progress" >
+              <transition event="nobench_trace:no_begin*" target="end" clearStoredFields="true"/>
+              <transition event="nobench_trace:no_end*" target="end" action="exit_interval_found" saveStoredFields="true" clearStoredFields="true"/>
+          </state>
+          <final id="end"/>
+      </fsm>
+  </patternHandler>
+</pattern>
+</tmfxml>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tmfxml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../org.eclipse.linuxtools.tmf.analysis.xml.core/src/org/eclipse/linuxtools/tmf/analysis/xml/core/module/xmlDefinition.xsd">
+
+    <timeGraphView id="org.eclipse.linuxtools.tmf.analysis.xml.ui.views.statesystem">
+        <head>
+            <analysis id="nobench.state.provider" />
+            <label value="RTOS Timegraph view" />
+        </head>
+        <!-- StateValues -->
+        <definedValue name="Running" value="100" color="#118811" />
+        <definedValue name="Prempted ISR" value="101" color="#F57B3D" />
+        <definedValue name="Waiting" value="102" color="#AEB522" />
+
+        <definedValue name="Handling ISR" value="103" color="#A61515" />
+        <definedValue name="Nothing" value="104" color="#E0E0E0" />
+
+        <!-- Control Flow View -->
+        <entry path="Tasks/*">
+            <display type="self" />
+        </entry>
+    </timeGraphView>
+
+    <stateProvider version="0" id="nobench.state.provider">
+      <head>
+         <traceType id="org.eclipse.linuxtools.tmf.ui.type.ctf"/>
+         <label value="Benchmark Timegraph state provider" />
+      </head>
+
+     <definedValue name="RUNNING" value="100" />
+     <definedValue name="PREMPT_ISR" value="101" />
+     <definedValue name="WAITING" value="102" />
+     <definedValue name="ISR_ON" value="103" />
+     <definedValue name="ISR_OFF" value="104" />
+
+     <eventHandler eventName="switch_in">
+        <stateChange>
+           <stateAttribute type="constant" value="Tasks" />
+           <stateAttribute type="eventField" value="tid" />
+           <stateValue type="int" value="$RUNNING" />
+        </stateChange>
+        <stateChange>
+           <stateAttribute type="constant" value="Active" />
+           <stateValue type="eventField" value="tid" />
+        </stateChange>
+     </eventHandler>
+
+     <eventHandler eventName="switch_out">
+        <stateChange>
+           <stateAttribute type="constant" value="Tasks" />
+           <stateAttribute type="eventField" value="tid" />
+           <stateValue type="int" value="$WAITING" />
+        </stateChange>
+     </eventHandler>
+
+     <eventHandler eventName="switch_ready">
+        <stateChange>
+           <stateAttribute type="constant" value="Tasks" />
+           <stateAttribute type="eventField" value="tid" />
+           <stateValue type="int" value="$WAITING" />
+        </stateChange>
+     </eventHandler>
+
+     <eventHandler eventName="int_entry">
+        <stateChange>
+           <stateAttribute type="constant" value="Tasks" />
+           <stateAttribute type="constant" value="ISR" />
+           <stateValue type="int" value="$ISR_ON" />
+        </stateChange>
+        <stateChange>
+           <stateAttribute type="constant" value="Tasks" />
+           <stateAttribute type="query">
+              <stateAttribute type="constant" value="Active" />
+           </stateAttribute>
+           <stateValue type="int" value="$PREMPT_ISR" />
+        </stateChange>
+     </eventHandler>
+
+     <eventHandler eventName="int_exit">
+        <stateChange>
+           <stateAttribute type="constant" value="Tasks" />
+           <stateAttribute type="constant" value="ISR" />
+           <stateValue type="int" value="$ISR_OFF" />
+        </stateChange>
+        <stateChange>
+           <stateAttribute type="constant" value="Tasks" />
+           <stateAttribute type="query">
+              <stateAttribute type="constant" value="Active" />
+           </stateAttribute>
+           <stateValue type="int" value="$RUNNING" />
+        </stateChange>
+     </eventHandler>
+
+   </stateProvider>
+</tmfxml>
