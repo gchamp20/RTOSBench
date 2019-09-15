@@ -1,0 +1,3 @@
+[submodule "example/freertos-rpi2/freertos"]
+	path = example/freertos-rpi2/freertos
+	url = https://github.com/gchamp20/benchmark

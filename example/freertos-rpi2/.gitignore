@@ -1,0 +1,4 @@
+kernel.img
+kernel7.list
+copy_sd.sh
+bld/*
