@@ -1,4 +1,6 @@
-kernel.img
-kernel7.list
+*.img
+*.elf
+*.list
+*.map
 copy_sd.sh
 bld/*
