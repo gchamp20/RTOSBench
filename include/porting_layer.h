@@ -102,7 +102,7 @@
 				{ \
 					min_cycles = cycles; \
 				} \
-				average_cycles = 0; \
+				average_cycles += (cycles - average_cycles) / (n + 1); \
 			}\
 		} while(0);
 #else
