@@ -33,11 +33,11 @@ CFLAGS += -nostdlib -nostartfiles -ffreestanding \
 		  -I $(NOBENCH_PATH)/include \
 		  -D RPI2 \
 		  -D NB_ITER=$(NO_NB_ITER) \
-		  -march=armv7-a -mtune=cortex-a7 \
+		  -mcpu=cortex-a7 -mfpu=vfpv4-d16 \
 		  -MD \
 		  -O2 -g
 
-ALFLAGS += -mcpu=cortex-a7
+ALFLAGS += -mcpu=cortex-a7 -mfpu=vfpv4-d16
 
 VPATH +=$(FREERTOS_SRC_DIR):
 VPATH +=$(FREERTOS_SRC_DIR)/portable/GCC/ARM_CA7:
