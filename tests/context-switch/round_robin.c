@@ -4,8 +4,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#define NO_VERBOSE_RESULTS
-
 #include "porting_layer.h"
 
 #include "math.h"
@@ -30,8 +28,6 @@ DECLARE_TIME_COUNTERS(no_time_t, _)
 
 volatile int tasks_idx;
 volatile int tasks_done_count;
-
-int64_t results[NB_ITER];
 
 no_main_retval_t main(no_main_argument_t args)
 {
@@ -76,11 +72,7 @@ no_task_retval_t task(no_task_argument_t args)
 				COMPUTE_TIME_STATS(_, i);
 			}
 		}
-		for (i = 0; i < NB_ITER; i++)
-		{
-			printf("%ld\n", results[i]);
-		}
-		REPORT_BENCHMARK_RESULTS("-- cooperating scheduling ctx switch --")
+		REPORT_BENCHMARK_RESULTS("-- round robin context switch results --")
 	}
 	else if (local_idx == 1)
 	{
