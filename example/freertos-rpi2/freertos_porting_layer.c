@@ -31,7 +31,6 @@ void no_initialize_test(no_task_entry_t init_test_fct)
 {
 	unsigned int ra;
 
-	// Do we need this?
 	rpi_cpu_irq_disable();
 	rpi_gpio_sel_fun(47, 1);
 	rpi_gpio_sel_fun(35, 1);
@@ -52,48 +51,7 @@ void no_initialize_test(no_task_entry_t init_test_fct)
 	init_page_table();
 	mmu_init();
 
-	/*while (1) {
-
-		rpi_gpio_set_val(21, 1);
-		rpi_gpio_set_val(14, 1);
-		rpi_gpio_set_val(47, 1);
-		rpi_gpio_set_val(35, 1);
-
-		for (int i = 0 ; i < 100000; i++) {}
-
-		rpi_gpio_set_val(14, 0);
-		rpi_gpio_set_val(21, 0);
-		rpi_gpio_set_val(47, 0);
-		rpi_gpio_set_val(35, 0);
-
-		for (int i = 0 ; i < 100000; i++) {}
-	}*/
-
-	//no_init_timer();
-
 	rpi_aux_mu_init();
-
-	rpi_aux_mu_string("ACTUALLY POG");
-
-	/*
-	int32_t spin_t1;
-	int32_t spin_t2;
-	while (1) {
-		no_cycle_reset_counter();
-		spin_t1 = no_cycle_get_count();
-		for (int i = 0; i < 5000; i++) {
-			rpi_aux_mu_raw_putc(0x10);
-		}
-		spin_t2 = no_cycle_get_count();
-		rpi_gpio_set_val(21, 1);
-		for (int i = 0; i < 5000; i++) {
-			rpi_aux_mu_raw_putc(0x10);
-		}
-		rpi_gpio_set_val(21, 0);
-		memset(printfbuf, '\0', 100);
-		sprintf(printfbuf, "FULL=%d\n", spin_t2 - spin_t1);
-		rpi_aux_mu_string(printfbuf);
-	}*/
 
 #ifdef TRACING
 	clear_trace_buffer();
@@ -142,8 +100,6 @@ void no_task_delay(unsigned int milliseconds)
 void no_init_timer()
 {
 	/* Clock timer on APB clock (Half arm speed, 40MHz (from experiment) ??) */
-	//*coreTimer = (1 << 8);
-	// *coreTimer = 0;
 	*coreTimer = (1 << 7);
 
 	/* This is equivalent to setting prescaler to 1 */
@@ -162,9 +118,7 @@ void no_reset_timer()
 no_time_t no_add_times(const no_time_t* base, unsigned int milliseconds)
 {
 	no_time_t retval = ((*base) + milliseconds * 900000);
-	/*memset(printfbuf, '\0', 100);
-	sprintf(printfbuf, "next should be=%lu\n", retval);
-	rpi_aux_mu_string(printfbuf);*/
+	rpi_aux_mu_string(printfbuf);
 	return retval;
 }
 
@@ -178,12 +132,10 @@ no_time_t no_time_get()
 long no_time_diff(const no_time_t* t1, const no_time_t* t2)
 {
 	long diff = ((long)*t2 - (long)*t1);
-	//no_single_result_report("t2 ", *t2);
-	//no_single_result_report("t1 ", *t1);
-	/*if (diff < 0)
+	if (diff < 0)
 	{
 		diff = -diff;
-	}*/
+	}
 	return diff;
 }
 
@@ -196,7 +148,7 @@ void no_sem_wait(no_sem_t* sem)
 {
 	if (xSemaphoreTake(*sem, portMAX_DELAY) != pdTRUE)
 	{
-		no_serial_write("SEM T ER");
+		no_serial_write("sem_wait: error");
 	}
 }
 
@@ -204,7 +156,7 @@ void no_sem_signal(no_sem_t* sem)
 {
 	if (xSemaphoreGive(*sem) != pdTRUE)
 	{
-		no_serial_write("SEM G ER");
+		no_serial_write("sem_signal: error");
 	}
 }
 
@@ -216,14 +168,14 @@ void no_mutex_create(no_mutex_t* mutex)
 void no_mutex_acquire(no_mutex_t* mutex)
 {
 	if (xSemaphoreTake(*mutex, portMAX_DELAY) != pdTRUE) {
-		no_serial_write("Mutex acquire fail");
+		no_serial_write("mutex_acquire: fail");
 	}
 }
 
 void no_mutex_release(no_mutex_t* mutex)
 {
 	if (xSemaphoreGive(*mutex) != pdTRUE) {
-		no_serial_write("Mutex release fail");
+		no_serial_write("mutex_release: fail");
 	}
 }
 
