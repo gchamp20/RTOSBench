@@ -164,6 +164,10 @@
 
 #endif // TRACING
 
+#ifndef NO_DECREASE_TASK_PRIO
+#define NO_DECREASE_TASK_PRIO(prio, decrease_by) (prio - decrease_by)
+#endif // NO_DECREASE_TASK_PRIO
+
 /**
  * Porting API
  */
