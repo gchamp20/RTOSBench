@@ -111,7 +111,6 @@
 #define COMPUTE_TIME_STATS(SUFFIX, i) do { \
 			cycles = no_time_diff(&SUFFIX##_t1, &SUFFIX##_t2); \
 			no_cycles_results[i] = cycles; \
-			num_measurements++; \
 		} while(0);
 #endif // NO_VERBOSE_RESULTS
 
