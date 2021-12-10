@@ -43,7 +43,7 @@ no_task_retval_t jitter_initialize_test(no_task_argument_t args)
 		tasks_name[i][2] = (66 + i) % 255;
 		tasks_name[i][3] = (67 + i) % 255;
 		tasks_name[i][4] = '\0';
-		tasks_handle[i] = no_create_task(task, tasks_name[i], BASE_PRIO - 1);
+		tasks_handle[i] = no_create_task(task, tasks_name[i], NO_DECREASE_TASK_PRIO(BASE_PRIO, 1));
 	}
 
 	tasks_handle[NB_TASK + 1] = no_create_task(monitor, "MON", BASE_PRIO);

@@ -44,12 +44,12 @@ no_task_retval_t mutex_processing_initialize_tests(no_task_argument_t args)
 	/* Create task */
 	tasks_handle[0] = no_create_task(TC_low_prio,
 			"L",
-			BASE_PRIO - 2 /* TC_low_prio is the low priority task. */
+			NO_DECREASE_TASK_PRIO(BASE_PRIO, 2) /* TC_low_prio is the low priority task. */
 		);
 
 	tasks_handle[1] = no_create_task(TB_med_prio,
 			"M",
-			BASE_PRIO - 1 /* TB_med_prio is the med priority task. */
+			NO_DECREASE_TASK_PRIO(BASE_PRIO, 1) /* TB_med_prio is the med priority task. */
 		);
 
 	tasks_handle[2] = no_create_task(TA_high_prio,

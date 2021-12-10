@@ -37,7 +37,7 @@ no_task_retval_t mq_initialize_test(no_task_argument_t args)
 
 	tasks_handle[0] = no_create_task(sender,
 			"S",
-			BASE_PRIO - 1 /* sender is the low priority task. */
+			NO_DECREASE_TASK_PRIO(BASE_PRIO, 1) /* sender is the low priority task. */
 		);
 
 	tasks_handle[1] = no_create_task(receiver,

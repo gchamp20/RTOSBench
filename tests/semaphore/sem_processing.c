@@ -32,7 +32,7 @@ no_task_retval_t sem_processing_initialize_test(no_task_argument_t args)
 
 	task_handle = no_create_task(task,
 			"S",
-			BASE_PRIO - 1 /* `task` is the only task */
+			NO_DECREASE_TASK_PRIO(BASE_PRIO, 1) /* `task` is the only task */
 		);
 
 	return TASK_DEFAULT_RETURN;

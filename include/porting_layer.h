@@ -75,6 +75,7 @@
 	TYPE max_cycles = NO_INIT_MIN_TIME_VALUE; \
 	TYPE min_cycles = NO_INIT_MAX_TIME_VALUE; \
 	TYPE average_cycles = NO_INIT_MIN_TIME_VALUE; \
+	unsigned num_measurements = 0; \
 
 #else
 
@@ -91,7 +92,7 @@
 	SUFFIX##_t2 = no_time_get();
 
 #ifndef NO_VERBOSE_RESULTS
-#define COMPUTE_TIME_STATS(SUFFIX, n) do { \
+#define COMPUTE_TIME_STATS(SUFFIX, i) do { \
 			cycles = no_time_diff(&SUFFIX##_t1, &SUFFIX##_t2); \
 			if (cycles < NO_PART_MAX_GAP) { \
 				if (cycles > max_cycles) \
@@ -102,13 +103,14 @@
 				{ \
 					min_cycles = cycles; \
 				} \
-				average_cycles += (cycles - average_cycles) / (n + 1); \
+				average_cycles += (cycles - average_cycles) / (num_measurements + 1); \
+				num_measurements++; \
 			}\
 		} while(0);
 #else
-#define COMPUTE_TIME_STATS(SUFFIX, n) do { \
+#define COMPUTE_TIME_STATS(SUFFIX, i) do { \
 			cycles = no_time_diff(&SUFFIX##_t1, &SUFFIX##_t2); \
-			no_cycles_results[n] = cycles; \
+			no_cycles_results[i] = cycles; \
 		} while(0);
 #endif // NO_VERBOSE_RESULTS
 
@@ -116,7 +118,9 @@
 #define RESET_TIME_STATS() \
 	average_cycles = 0; \
 	max_cycles = 0; \
-	min_cycles = NO_INIT_MAX_TIME_VALUE;
+	min_cycles = NO_INIT_MAX_TIME_VALUE; \
+	num_measurements = 0; \
+
 #else
 #define RESET_TIME_STATS()
 #endif // NO_VERBOSE_RESULTS
@@ -151,7 +155,7 @@
 #define WRITE_T2_COUNTER(SUFFIX) \
 	no_tracing_write_event(SUFFIX##_ev_id_end);
 
-#define COMPUTE_TIME_STATS(SUFFIX, N) \
+#define COMPUTE_TIME_STATS(SUFFIX, i) \
 
 #define RESET_TIME_STATS() \
 
@@ -163,6 +167,10 @@
 #endif // REPORT_BENCHMARK_RESULTS
 
 #endif // TRACING
+
+#ifndef NO_DECREASE_TASK_PRIO
+#define NO_DECREASE_TASK_PRIO(prio, decrease_by) (prio - decrease_by)
+#endif // NO_DECREASE_TASK_PRIO
 
 /**
  * Porting API
