@@ -46,7 +46,7 @@ no_task_retval_t sem_prio_initialize_test(no_task_argument_t args)
 
 	tasks_handle[0] = no_create_task(TC_low_prio,
 			"L",
-			BASE_PRIO - 2 /* TC_low_prio is the low priority task. */
+			NO_DECREASE_TASK_PRIO(BASE_PRIO, 2) /* TC_low_prio is the low priority task. */
 		);
 
 	for (i = 0; i < NB_TASK; i++)
